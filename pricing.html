@@ -19,164 +19,156 @@
     .pricing-hero {
       background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
       color: white;
-      padding: 80px 20px 60px;
+      padding: 50px 20px 40px;
       text-align: center;
       position: relative;
-      overflow: hidden;
-    }
-    .pricing-hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-      opacity: 0.3;
     }
     .pricing-hero h1 {
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 800;
-      margin-bottom: 15px;
-      position: relative;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      margin-bottom: 10px;
     }
     .pricing-hero p {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       opacity: 0.95;
-      position: relative;
-      max-width: 600px;
-      margin: 0 auto;
     }
-    .pricing-container {
-      max-width: 1400px;
-      margin: -40px auto 60px;
+    
+    .search-filter-bar {
+      max-width: 1200px;
+      margin: -20px auto 30px;
       padding: 0 20px;
       position: relative;
       z-index: 10;
     }
-    .category-section {
-      margin-bottom: 40px;
+    .search-box {
       background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-      overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.05);
-    }
-    .category-header {
-      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-      color: white;
-      padding: 30px 35px;
+      border-radius: 50px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       display: flex;
       align-items: center;
+      padding: 15px 25px;
       gap: 15px;
     }
-    .category-icon {
-      font-size: 2.5rem;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      color: #0f172a;
     }
-    .category-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+    .search-box input::placeholder {
+      color: #94a3b8;
     }
-    .items-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 0;
-      padding: 0;
+    .search-icon {
+      font-size: 1.3rem;
+      color: #3b82f6;
     }
-    .item-card {
-      border-right: 1px solid #e5e7eb;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 30px;
-      transition: all 0.3s ease;
+    .pricing-container {
+      max-width: 1200px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+    }
+    
+    .category-tabs {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      background: white;
-      position: relative;
-    }
-    .item-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      transform: scaleX(0);
-      transition: transform 0.3s ease;
-    }
-    .item-card:hover {
-      background: #f8fafc;
-      box-shadow: inset 0 0 0 1px #3b82f6;
-      transform: translateY(-2px);
-      z-index: 1;
-    }
-    .item-card:hover::before {
-      transform: scaleX(1);
-    }
-    .item-header {
+      gap: 10px;
       margin-bottom: 20px;
+      overflow-x: auto;
+      padding: 5px 0;
     }
-    .item-name {
-      font-size: 1.15rem;
+    .category-tab {
+      padding: 12px 24px;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.2s;
+      color: #64748b;
+    }
+    .category-tab:hover {
+      border-color: #3b82f6;
+      color: #3b82f6;
+    }
+    .category-tab.active {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+    
+    .pricing-table-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .pricing-table thead {
+      background: #f8fafc;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .pricing-table th {
+      padding: 16px;
+      text-align: left;
       font-weight: 700;
       color: #0f172a;
-      margin-bottom: 8px;
-      line-height: 1.4;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .item-price {
-      font-size: 2rem;
-      color: #3b82f6;
-      font-weight: 800;
-      margin-bottom: 5px;
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
+    .pricing-table th:last-child {
+      text-align: center;
     }
-    .price-currency {
-      font-size: 1.3rem;
+    .pricing-table tbody tr {
+      border-bottom: 1px solid #f1f5f9;
+      transition: all 0.2s;
+    }
+    .pricing-table tbody tr:hover {
+      background: #f8fafc;
+    }
+    .pricing-table tbody tr.in-cart {
+      background: #ecfdf5;
+    }
+    .pricing-table td {
+      padding: 16px;
+    }
+    .item-name-cell {
       font-weight: 600;
+      color: #0f172a;
+      font-size: 1rem;
     }
-    .price-unit {
+    .item-note-text {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    .item-price-cell {
+      font-weight: 700;
+      color: #3b82f6;
+      font-size: 1.2rem;
+    }
+    .custom-quote {
+      color: #f59e0b;
       font-size: 0.9rem;
-      color: #64748b;
-      font-weight: 500;
     }
-    .item-note {
-      font-size: 0.875rem;
-      color: #64748b;
-      background: #fef3c7;
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      border-left: 3px solid #f59e0b;
-      line-height: 1.5;
-    }
-    .item-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .quantity-control {
+    .quick-controls {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       justify-content: center;
-      background: #f1f5f9;
-      padding: 8px;
-      border-radius: 12px;
     }
-    .quantity-control button {
-      width: 40px;
-      height: 40px;
-      border: 2px solid #cbd5e1;
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      border: 2px solid #e2e8f0;
       background: white;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: #3b82f6;
       display: flex;
@@ -184,84 +176,30 @@
       justify-content: center;
       transition: all 0.2s;
     }
-    .quantity-control button:hover {
+    .qty-btn:hover:not(:disabled) {
       background: #3b82f6;
       color: white;
       border-color: #3b82f6;
-      transform: scale(1.05);
     }
-    .quantity-control button:active {
-      transform: scale(0.95);
+    .qty-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
     }
-    .quantity-control input {
-      width: 60px;
+    .qty-display {
+      min-width: 40px;
       text-align: center;
-      border: 2px solid #cbd5e1;
-      border-radius: 10px;
-      padding: 10px;
-      font-size: 1.1rem;
       font-weight: 700;
-      background: white;
       color: #0f172a;
+      font-size: 1.1rem;
     }
-    .quantity-control input:focus {
-      outline: none;
-      border-color: #3b82f6;
-    }
-    .add-to-cart-btn {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
-      border: none;
-      padding: 14px 24px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 1rem;
-      transition: all 0.3s;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-      position: relative;
-      overflow: hidden;
-    }
-    .add-to-cart-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.5s;
-    }
-    .add-to-cart-btn:hover::before {
-      left: 100%;
-    }
-    .add-to-cart-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-    }
-    .add-to-cart-btn:active {
-      transform: translateY(0);
-    }
-    .add-to-cart-btn.added {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-    .custom-price-card {
-      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-      border: 2px dashed #94a3b8;
-    }
-    .custom-price-card .item-price {
-      color: #64748b;
-    }
-    .contact-note {
-      background: #dbeafe;
-      color: #1e40af;
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-weight: 600;
+    .empty-state {
       text-align: center;
-      margin-top: 10px;
-      border: 2px solid #3b82f6;
+      padding: 60px 20px;
+      color: #94a3b8;
+    }
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
     }
     .cart-float-btn {
       position: fixed;
@@ -307,22 +245,25 @@
     }
     @media (max-width: 768px) {
       .pricing-hero h1 {
-        font-size: 2.2rem;
+        font-size: 2rem;
       }
-      .pricing-hero {
-        padding: 60px 20px 40px;
+      .pricing-table th:nth-child(3),
+      .pricing-table td:nth-child(3) {
+        display: none;
       }
-      .items-grid {
-        grid-template-columns: 1fr;
+      .item-name-cell {
+        font-size: 0.9rem;
       }
-      .item-card {
-        border-right: none;
+      .quick-controls {
+        flex-direction: column;
+        gap: 4px;
       }
-      .category-header {
-        padding: 25px 20px;
+      .qty-btn {
+        width: 32px;
+        height: 32px;
       }
-      .category-title {
-        font-size: 1.4rem;
+      .category-tabs {
+        justify-content: flex-start;
       }
     }
   </style>
@@ -331,12 +272,33 @@
   <div id="header-placeholder"></div>
 
   <section class="pricing-hero">
-    <h1>Our Pricing</h1>
-    <p>Transparent pricing for all our dry cleaning services</p>
+    <h1>Quick Price List</h1>
+    <p>Select items and quantities - Add to cart instantly</p>
   </section>
 
+  <div class="search-filter-bar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search items... (e.g., shirt, saree, blanket)">
+    </div>
+  </div>
+
   <div class="pricing-container">
-    <div id="pricing-content"></div>
+    <div class="category-tabs" id="categoryTabs"></div>
+    <div class="pricing-table-container">
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th style="text-align: center;">Quantity</th>
+          </tr>
+        </thead>
+        <tbody id="pricingTableBody">
+          <!-- Items will be inserted here -->
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <a href="cart.html" class="cart-float-btn" id="cartFloatBtn">

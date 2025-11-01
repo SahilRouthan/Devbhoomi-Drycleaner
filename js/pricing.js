@@ -1,194 +1,250 @@
 // Pricing Page JavaScript
+let allCategories = [];
+let currentCategory = 'all';
+let itemQuantities = {}; // Track quantities: {itemId: quantity}
+
 document.addEventListener('DOMContentLoaded', async function() {
   try {
     const response = await fetch('src/data/pricing.json');
     const data = await response.json();
-    renderPricing(data.categories);
+    allCategories = data.categories;
+    
+    // Load existing cart quantities
+    loadCartQuantities();
+    
+    // Render category tabs
+    renderCategoryTabs();
+    
+    // Render items
+    renderItems();
+    
+    // Setup search
+    setupSearch();
   } catch (error) {
     console.error('Error loading pricing data:', error);
-    document.getElementById('pricing-content').innerHTML = 
-      '<p style="text-align:center;color:#ef4444;">Error loading pricing. Please refresh the page.</p>';
+    document.getElementById('pricingTableBody').innerHTML = 
+      '<tr><td colspan="3" style="text-align:center;color:#ef4444;padding:40px;">Error loading pricing. Please refresh the page.</td></tr>';
   }
 });
 
-function renderPricing(categories) {
-  const container = document.getElementById('pricing-content');
-  
+function loadCartQuantities() {
+  const cartItems = cart.getItems();
+  cartItems.forEach(item => {
+    itemQuantities[item.id] = item.quantity;
+  });
+}
+
+function renderCategoryTabs() {
+  const tabsContainer = document.getElementById('categoryTabs');
   const categoryIcons = {
+    'all': '📋',
     'mens': '👔',
     'womens': '👗',
     'home': '🏠',
     'kids': '👶'
   };
   
-  categories.forEach(category => {
-    const section = document.createElement('div');
-    section.className = 'category-section';
-    
-    const header = document.createElement('div');
-    header.className = 'category-header';
-    
-    const icon = document.createElement('div');
-    icon.className = 'category-icon';
-    icon.textContent = categoryIcons[category.id] || '✨';
-    
-    const title = document.createElement('div');
-    title.className = 'category-title';
-    title.textContent = category.name;
-    
-    header.appendChild(icon);
-    header.appendChild(title);
-    
-    const grid = document.createElement('div');
-    grid.className = 'items-grid';
-    
-    category.items.forEach(item => {
-      const card = createItemCard(item, category.id);
-      grid.appendChild(card);
-    });
-    
-    section.appendChild(header);
-    section.appendChild(grid);
-    container.appendChild(section);
+  const allTab = document.createElement('button');
+  allTab.className = 'category-tab active';
+  allTab.innerHTML = `${categoryIcons['all']} All Items`;
+  allTab.onclick = () => switchCategory('all', allTab);
+  tabsContainer.appendChild(allTab);
+  
+  allCategories.forEach(category => {
+    const tab = document.createElement('button');
+    tab.className = 'category-tab';
+    tab.innerHTML = `${categoryIcons[category.id] || '✨'} ${category.name}`;
+    tab.onclick = () => switchCategory(category.id, tab);
+    tabsContainer.appendChild(tab);
   });
 }
 
-function createItemCard(item, categoryId) {
-  const card = document.createElement('div');
-  card.className = 'item-card';
+function switchCategory(categoryId, clickedTab) {
+  currentCategory = categoryId;
   
-  // Add custom styling for items with price = 0
-  if (item.price === 0) {
-    card.classList.add('custom-price-card');
-  }
+  // Update active tab
+  document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+  clickedTab.classList.add('active');
   
-  const itemHeader = document.createElement('div');
-  itemHeader.className = 'item-header';
+  // Re-render items
+  renderItems();
+}
+
+function renderItems(searchQuery = '') {
+  const tbody = document.getElementById('pricingTableBody');
+  tbody.innerHTML = '';
   
-  const name = document.createElement('div');
-  name.className = 'item-name';
-  name.textContent = item.name;
+  let itemsToShow = [];
   
-  const priceDiv = document.createElement('div');
-  priceDiv.className = 'item-price';
-  
-  if (item.price === 0) {
-    const currency = document.createElement('span');
-    currency.className = 'price-currency';
-    currency.textContent = '💬';
-    
-    const amount = document.createElement('span');
-    amount.textContent = 'Custom Quote';
-    amount.style.fontSize = '1.3rem';
-    
-    priceDiv.appendChild(currency);
-    priceDiv.appendChild(amount);
+  if (currentCategory === 'all') {
+    allCategories.forEach(cat => {
+      itemsToShow = itemsToShow.concat(cat.items.map(item => ({...item, categoryId: cat.id})));
+    });
   } else {
-    const currency = document.createElement('span');
-    currency.className = 'price-currency';
-    currency.textContent = '₹';
-    
-    const amount = document.createElement('span');
-    amount.textContent = item.price;
-    
-    const dash = document.createElement('span');
-    dash.className = 'price-unit';
-    dash.textContent = '/-';
-    
-    priceDiv.appendChild(currency);
-    priceDiv.appendChild(amount);
-    priceDiv.appendChild(dash);
+    const category = allCategories.find(c => c.id === currentCategory);
+    if (category) {
+      itemsToShow = category.items.map(item => ({...item, categoryId: category.id}));
+    }
   }
   
-  if (item.unit) {
-    const unitSpan = document.createElement('div');
-    unitSpan.className = 'price-unit';
-    unitSpan.style.marginTop = '4px';
-    unitSpan.textContent = item.unit;
-    priceDiv.appendChild(unitSpan);
+  // Filter by search
+  if (searchQuery) {
+    const query = searchQuery.toLowerCase();
+    itemsToShow = itemsToShow.filter(item => 
+      item.name.toLowerCase().includes(query)
+    );
   }
   
-  itemHeader.appendChild(name);
-  itemHeader.appendChild(priceDiv);
-  card.appendChild(itemHeader);
+  if (itemsToShow.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3"><div class="empty-state"><div class="empty-state-icon">🔍</div><div>No items found</div></div></td></tr>';
+    return;
+  }
+  
+  itemsToShow.forEach(item => {
+    const row = createItemRow(item);
+    tbody.appendChild(row);
+  });
+}
+
+function setupSearch() {
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', (e) => {
+    renderItems(e.target.value);
+  });
+}
+
+function createItemRow(item) {
+  const row = document.createElement('tr');
+  const qty = itemQuantities[item.id] || 0;
+  
+  if (qty > 0) {
+    row.classList.add('in-cart');
+  }
+  
+  // Item name cell
+  const nameCell = document.createElement('td');
+  const nameDiv = document.createElement('div');
+  nameDiv.className = 'item-name-cell';
+  nameDiv.textContent = item.name;
+  nameCell.appendChild(nameDiv);
   
   if (item.note) {
-    const note = document.createElement('div');
-    note.className = 'item-note';
-    note.textContent = `💡 ${item.note}`;
-    card.appendChild(note);
+    const noteDiv = document.createElement('div');
+    noteDiv.className = 'item-note-text';
+    noteDiv.textContent = `💡 ${item.note}`;
+    nameCell.appendChild(noteDiv);
   }
   
-  const actions = document.createElement('div');
-  actions.className = 'item-actions';
+  // Price cell
+  const priceCell = document.createElement('td');
+  const priceDiv = document.createElement('div');
+  priceDiv.className = 'item-price-cell';
   
-  // Skip cart functionality for items with custom pricing
-  if (item.price > 0) {
-    const quantityControl = document.createElement('div');
-    quantityControl.className = 'quantity-control';
-    
-    const decreaseBtn = document.createElement('button');
-    decreaseBtn.textContent = '−';
-    decreaseBtn.onclick = () => {
-      const input = quantityControl.querySelector('input');
-      const newValue = Math.max(1, parseInt(input.value) - 1);
-      input.value = newValue;
-    };
-    
-    const quantityInput = document.createElement('input');
-    quantityInput.type = 'number';
-    quantityInput.value = '1';
-    quantityInput.min = '1';
-    quantityInput.max = '99';
-    
-    const increaseBtn = document.createElement('button');
-    increaseBtn.textContent = '+';
-    increaseBtn.onclick = () => {
-      const input = quantityControl.querySelector('input');
-      const newValue = Math.min(99, parseInt(input.value) + 1);
-      input.value = newValue;
-    };
-    
-    quantityControl.appendChild(decreaseBtn);
-    quantityControl.appendChild(quantityInput);
-    quantityControl.appendChild(increaseBtn);
-    
-    const addButton = document.createElement('button');
-    addButton.className = 'add-to-cart-btn';
-    addButton.innerHTML = '🛒 Add to Cart';
-    addButton.onclick = () => {
-      const quantity = parseInt(quantityInput.value);
-      if (quantity > 0) {
-        cart.addItem({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          category: categoryId
-        }, quantity);
-        
-        // Visual feedback
-        addButton.innerHTML = '✓ Added to Cart!';
-        addButton.classList.add('added');
-        setTimeout(() => {
-          addButton.innerHTML = '🛒 Add to Cart';
-          addButton.classList.remove('added');
-        }, 1500);
-        
-        // Reset quantity
-        quantityInput.value = '1';
-      }
-    };
-    
-    actions.appendChild(quantityControl);
-    actions.appendChild(addButton);
-    card.appendChild(actions);
+  if (item.price === 0) {
+    priceDiv.innerHTML = '<span class="custom-quote">Contact for quote</span>';
   } else {
-    const contactNote = document.createElement('div');
-    contactNote.className = 'contact-note';
-    contactNote.innerHTML = '📞 Contact us for custom quote';
-    actions.appendChild(contactNote);
-    card.appendChild(actions);
+    priceDiv.textContent = `₹${item.price}/-`;
+    if (item.unit) {
+      const unitSpan = document.createElement('div');
+      unitSpan.style.fontSize = '0.8rem';
+      unitSpan.style.color = '#64748b';
+      unitSpan.style.fontWeight = 'normal';
+      unitSpan.textContent = item.unit;
+      priceDiv.appendChild(unitSpan);
+    }
+  }
+  priceCell.appendChild(priceDiv);
+  
+  // Quantity controls cell
+  const controlsCell = document.createElement('td');
+  const controlsDiv = document.createElement('div');
+  controlsDiv.className = 'quick-controls';
+  
+  if (item.price > 0) {
+    const minusBtn = document.createElement('button');
+    minusBtn.className = 'qty-btn';
+    minusBtn.textContent = '−';
+    minusBtn.disabled = qty === 0;
+    minusBtn.onclick = () => decreaseQuantity(item, row);
+    
+    const qtyDisplay = document.createElement('div');
+    qtyDisplay.className = 'qty-display';
+    qtyDisplay.textContent = qty;
+    qtyDisplay.id = `qty-${item.id}`;
+    
+    const plusBtn = document.createElement('button');
+    plusBtn.className = 'qty-btn';
+    plusBtn.textContent = '+';
+    plusBtn.onclick = () => increaseQuantity(item, row);
+    
+    controlsDiv.appendChild(minusBtn);
+    controlsDiv.appendChild(qtyDisplay);
+    controlsDiv.appendChild(plusBtn);
+  } else {
+    controlsDiv.innerHTML = '<span style="color:#f59e0b;font-size:0.9rem;">Custom</span>';
   }
   
-  return card;
+  controlsCell.appendChild(controlsDiv);
+  
+  row.appendChild(nameCell);
+  row.appendChild(priceCell);
+  row.appendChild(controlsCell);
+  
+  return row;
+}
+
+function increaseQuantity(item, row) {
+  const currentQty = itemQuantities[item.id] || 0;
+  const newQty = currentQty + 1;
+  
+  if (currentQty === 0) {
+    // Add new item to cart
+    cart.addItem({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      category: item.categoryId
+    }, 1);
+  } else {
+    // Update existing item
+    cart.updateQuantity(item.id, newQty);
+  }
+  
+  itemQuantities[item.id] = newQty;
+  updateRowDisplay(item.id, newQty, row);
+}
+
+function decreaseQuantity(item, row) {
+  const currentQty = itemQuantities[item.id] || 0;
+  if (currentQty === 0) return;
+  
+  const newQty = currentQty - 1;
+  
+  if (newQty === 0) {
+    cart.removeItem(item.id);
+    delete itemQuantities[item.id];
+  } else {
+    cart.updateQuantity(item.id, newQty);
+    itemQuantities[item.id] = newQty;
+  }
+  
+  updateRowDisplay(item.id, newQty, row);
+}
+
+function updateRowDisplay(itemId, qty, row) {
+  const qtyDisplay = document.getElementById(`qty-${itemId}`);
+  if (qtyDisplay) {
+    qtyDisplay.textContent = qty;
+  }
+  
+  const minusBtn = row.querySelector('.qty-btn:first-child');
+  if (minusBtn) {
+    minusBtn.disabled = qty === 0;
+  }
+  
+  if (qty > 0) {
+    row.classList.add('in-cart');
+  } else {
+    row.classList.remove('in-cart');
+  }
 }
