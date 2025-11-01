@@ -233,10 +233,23 @@
           serviceField.value = 'Pickup & Delivery';
         }
 
-        // Update message field with order reference
+        // Update message field with complete order details
         const messageField = document.getElementById('message');
         if (messageField && !messageField.value) {
-          messageField.value = `Order confirmation: ${order.items.length} item(s), Total: ₹${order.total.toFixed(2)}, Payment: ${order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Paid Online'}`;
+          let itemsList = 'ITEMS:\n';
+          order.items.forEach(item => {
+            itemsList += `- ${item.name} x ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}\n`;
+          });
+          
+          let orderSummary = `${itemsList}\n`;
+          orderSummary += `Subtotal: ₹${order.subtotal.toFixed(2)}\n`;
+          if (order.discount > 0) {
+            orderSummary += `Discount: -₹${order.discount.toFixed(2)}\n`;
+          }
+          orderSummary += `TOTAL: ₹${order.total.toFixed(2)}\n\n`;
+          orderSummary += `Payment Method: ${order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Paid Online'}`;
+          
+          messageField.value = orderSummary;
         }
       }
 

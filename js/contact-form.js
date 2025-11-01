@@ -171,7 +171,9 @@
         if (isOrder) {
           // Process order
           const order = JSON.parse(pendingOrder);
+          const orderId = Date.now().toString().slice(-6);
           const orderData = {
+            orderId: orderId,
             ...order,
             customerName: name,
             customerPhone: phone,
@@ -190,8 +192,14 @@
           localStorage.removeItem('pendingOrder');
           localStorage.removeItem('dryCleaningCart');
 
-          const success = `✓ Order Confirmed!\n\nOrder ID: #${Date.now().toString().slice(-6)}\nWe'll contact you at ${phone} to schedule pickup.\n\nThank you for choosing Devbhoomi DryCleans!`;
-          statusEl.textContent = success;
+          // Build detailed item list for confirmation
+          let itemsList = '';
+          order.items.forEach(item => {
+            itemsList += `\n- ${item.name} x ${item.quantity}`;
+          });
+
+          const success = `✓ Order Confirmed!\n\nOrder ID: #${orderId}\n\nItems:${itemsList}\n\nTotal: ₹${order.total.toFixed(2)}\nPayment: ${order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Paid Online'}\n\nWe'll contact you at ${phone} to schedule pickup.\n\nThank you for choosing Devbhoomi DryCleans!`;
+          statusEl.textContent = 'Order confirmed successfully!';
           showToast('Order confirmed successfully!', true);
           
           // Show detailed confirmation
