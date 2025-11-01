@@ -4,6 +4,7 @@ const Order = require('../models/Order');
 const Pricing = require('../models/Pricing');
 const Contact = require('../models/Contact');
 const Testimonial = require('../models/Testimonial');
+const { sendOrderStatusUpdateSMS } = require('../utils/sms');
 
 // Simple auth middleware (you can enhance this with JWT later)
 const adminAuth = (req, res, next) => {
@@ -66,6 +67,26 @@ router.patch('/orders/:orderId/status', async (req, res) => {
     });
 
     await order.save();
+
+    // Send SMS notification to customer about status update
+    try {
+      const smsOrderData = {
+        orderId: order.orderId,
+        customerDetails: {
+          name: order.customerName,
+          phone: order.customerPhone,
+          address: order.pickupAddress
+        },
+        totalAmount: order.total,
+        paymentMethod: order.paymentMethod.toUpperCase()
+      };
+      
+      await sendOrderStatusUpdateSMS(smsOrderData, status);
+      console.log(`SMS notification sent for order ${order.orderId} status: ${status}`);
+    } catch (smsError) {
+      console.error('SMS sending failed:', smsError.message);
+      // Don't fail the status update if SMS fails
+    }
 
     res.json({ success: true, message: 'Order status updated', order });
   } catch (error) {

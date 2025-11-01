@@ -7,6 +7,7 @@ Complete Node.js backend for the dry cleaning website with MongoDB and Razorpay 
 ✅ **Order Management** - Create, track, and manage orders  
 ✅ **Payment Integration** - Razorpay for online payments  
 ✅ **Email Notifications** - Automatic order confirmations  
+✅ **SMS Notifications** - Real-time SMS to customers & service provider  
 ✅ **Dynamic Pricing** - Database-driven pricing management  
 ✅ **Contact Form** - Customer inquiries and feedback  
 ✅ **Admin Dashboard** - Order tracking and management  
@@ -18,6 +19,7 @@ Complete Node.js backend for the dry cleaning website with MongoDB and Razorpay 
 - **MongoDB** + **Mongoose** - Database
 - **Razorpay** - Payment gateway
 - **Nodemailer** - Email notifications
+- **Twilio** - SMS notifications
 - **JWT** - Authentication (for admin)
 
 ## Setup Instructions
@@ -107,7 +109,24 @@ mongod
 3. Generate Test/Live keys
 4. Copy Key ID and Secret to `.env`
 
-### 6. Seed Pricing Data
+### 6. Setup SMS Notifications (Optional but Recommended)
+
+See detailed guide: **[SMS_SETUP.md](./SMS_SETUP.md)**
+
+Quick setup:
+1. Sign up at https://www.twilio.com (get $15 free credit)
+2. Get Account SID, Auth Token, and Phone Number
+3. Add to `.env`:
+   ```env
+   TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxx
+   TWILIO_AUTH_TOKEN=your_token
+   TWILIO_PHONE_NUMBER=+1234567890
+   ```
+4. Test: `node test-sms.js`
+
+**Alternative:** Use Indian SMS gateways (MSG91, Fast2SMS) for lower costs. See SMS_SETUP.md for details.
+
+### 7. Seed Pricing Data
 
 ```bash
 npm run seed
@@ -115,7 +134,7 @@ npm run seed
 
 This imports all pricing from `src/data/pricing.json` into MongoDB.
 
-### 7. Start Server
+### 8. Start Server
 
 ```bash
 # Development (with auto-reload)

@@ -3,6 +3,11 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Order = require('../models/Order');
 const { sendOrderConfirmationEmail, sendAdminNotification } = require('../utils/email');
+const { 
+  sendCustomerOrderSMS, 
+  sendServiceProviderOrderSMS, 
+  sendOrderStatusUpdateSMS 
+} = require('../utils/sms');
 
 // Create new order
 router.post('/', [
@@ -70,6 +75,36 @@ router.post('/', [
     } catch (emailError) {
       console.error('Email sending failed:', emailError);
       // Don't fail the order if email fails
+    }
+
+    // Send SMS notifications
+    try {
+      // Format order data for SMS
+      const smsOrderData = {
+        orderId: order.orderId,
+        customerDetails: {
+          name: order.customerName,
+          phone: order.customerPhone,
+          address: order.pickupAddress,
+          city: order.deliveryAddress.split(',')[0] || 'N/A',
+          pincode: 'N/A' // Extract from address if available
+        },
+        items: order.items,
+        totalAmount: order.total,
+        pickupDate: new Date(order.createdAt).toLocaleDateString('en-IN'),
+        paymentMethod: order.paymentMethod.toUpperCase()
+      };
+
+      // Send SMS to customer
+      await sendCustomerOrderSMS(smsOrderData);
+      
+      // Send SMS to service provider
+      await sendServiceProviderOrderSMS(smsOrderData);
+      
+      console.log('SMS notifications sent successfully');
+    } catch (smsError) {
+      console.error('SMS sending failed:', smsError.message);
+      // Don't fail the order if SMS fails
     }
 
     res.status(201).json({
