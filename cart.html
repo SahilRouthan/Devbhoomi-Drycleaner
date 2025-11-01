@@ -151,7 +151,7 @@
     }
     .confirm-yes {
       background: #ef4444;
-      color: white;
+      color: #6b7280;
     }
     .confirm-yes:hover {
       background: #dc2626;
@@ -318,7 +318,7 @@
       // Replace controls with inline confirmation
       controlsDiv.innerHTML = `
         <div class="confirm-remove">
-          <span class="confirm-remove-text">Remove?</span>
+          <span class="confirm-remove-text">Are you sure you want to remove this item?</span>
           <button class="confirm-btn confirm-yes" onclick="confirmRemoveItem('${itemId}')">Yes</button>
           <button class="confirm-btn confirm-no" onclick="cancelRemove('${itemId}')">No</button>
         </div>
