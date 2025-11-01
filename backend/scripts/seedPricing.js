@@ -6,10 +6,7 @@ const pricingData = require('../../src/data/pricing.json');
 async function seedPricing() {
   try {
     // Connect to MongoDB
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log('✓ Connected to MongoDB');
 
     // Clear existing pricing
