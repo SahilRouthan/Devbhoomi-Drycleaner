@@ -164,58 +164,96 @@
       setLoading(true);
       statusEl.textContent = isOrder ? 'Confirming your order...' : 'Sending your message...';
 
-      // Simulate network; replace with real fetch() when backend available
+      // Submit to backend API
       try {
-        await new Promise(r => setTimeout(r, 900));
-        
         if (isOrder) {
-          // Process order
+          // Process order via API
           const order = JSON.parse(pendingOrder);
-          const orderId = Date.now().toString().slice(-6);
+          
           const orderData = {
-            orderId: orderId,
-            ...order,
+            items: order.items,
+            subtotal: order.subtotal,
+            discount: order.discount,
+            total: order.total,
             customerName: name,
             customerPhone: phone,
-            customerEmail: email,
+            customerEmail: email || '',
             pickupAddress: pickupAddress,
             deliveryAddress: qv('delivery-address').trim() || pickupAddress,
-            confirmedAt: new Date().toISOString()
+            paymentMethod: order.paymentMethod,
+            paymentId: order.paymentId || '',
+            razorpayOrderId: order.razorpayOrderId || '',
+            notes: message
           };
 
-          // Save confirmed order (in real app, send to server)
-          const orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
-          orderHistory.push(orderData);
-          localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
-
-          // Clear pending order and cart
-          localStorage.removeItem('pendingOrder');
-          localStorage.removeItem('dryCleaningCart');
-
-          // Build detailed item list for confirmation
-          let itemsList = '';
-          order.items.forEach(item => {
-            itemsList += `\n- ${item.name} x ${item.quantity}`;
+          // Send to backend
+          const response = await fetch(`${API_CONFIG.BASE_URL}/orders`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
           });
 
-          const success = `✓ Order Confirmed!\n\nOrder ID: #${orderId}\n\nItems:${itemsList}\n\nTotal: ₹${order.total.toFixed(2)}\nPayment: ${order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Paid Online'}\n\nWe'll contact you at ${phone} to schedule pickup.\n\nThank you for choosing Devbhoomi DryCleans!`;
-          statusEl.textContent = 'Order confirmed successfully!';
-          showToast('Order confirmed successfully!', true);
-          
-          // Show detailed confirmation
-          alert(success);
-          
-          // Redirect to home after confirmation
-          setTimeout(() => {
-            window.location.href = 'index.html';
-          }, 2000);
+          const result = await response.json();
+
+          if (result.success) {
+            // Clear pending order and cart
+            localStorage.removeItem('pendingOrder');
+            localStorage.removeItem('dryCleaningCart');
+
+            // Build detailed item list for confirmation
+            let itemsList = '';
+            order.items.forEach(item => {
+              itemsList += `\n- ${item.name} x ${item.quantity}`;
+            });
+
+            const success = `✓ Order Confirmed!\n\nOrder ID: #${result.order.orderId}\n\nItems:${itemsList}\n\nTotal: ₹${order.total.toFixed(2)}\nPayment: ${order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Paid Online'}\n\nWe'll contact you at ${phone} to schedule pickup.\n\nYou will receive an email confirmation shortly.\n\nThank you for choosing Devbhoomi DryCleans!`;
+            statusEl.textContent = 'Order confirmed successfully!';
+            showToast('Order confirmed successfully!', true);
+            
+            // Show detailed confirmation
+            alert(success);
+            
+            // Redirect to home after confirmation
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 2000);
+          } else {
+            throw new Error(result.message || 'Failed to place order');
+          }
         } else {
-          // Regular contact form
-          const success = 'Message sent — we will reply within 24 hours.';
-          statusEl.textContent = success;
-          showToast(success, true);
-          form.reset();
-          try { document.getElementById('name').focus(); } catch (e) {}
+          // Regular contact form submission via API
+          const contactData = {
+            name,
+            email,
+            phone,
+            service: qv('service'),
+            pickupAddress: pickupAddress || '',
+            deliveryAddress: qv('delivery-address').trim() || '',
+            message,
+            type: 'inquiry'
+          };
+
+          const response = await fetch(`${API_CONFIG.BASE_URL}/contact`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(contactData)
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            const success = 'Message sent — we will reply within 24 hours.';
+            statusEl.textContent = success;
+            showToast(success, true);
+            form.reset();
+            try { document.getElementById('name').focus(); } catch (e) {}
+          } else {
+            throw new Error(result.message || 'Failed to send message');
+          }
         }
       } catch (err) {
         console.error('contact-form send error', err);

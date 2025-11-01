@@ -5,9 +5,15 @@ let itemQuantities = {}; // Track quantities: {itemId: quantity}
 
 document.addEventListener('DOMContentLoaded', async function() {
   try {
-    const response = await fetch('src/data/pricing.json');
+    // Fetch pricing from backend API
+    const response = await fetch(`${API_CONFIG.BASE_URL}/pricing/all`);
     const data = await response.json();
-    allCategories = data.categories;
+    
+    if (data.success) {
+      allCategories = data.categories;
+    } else {
+      throw new Error('Failed to load pricing');
+    }
     
     // Load existing cart quantities
     loadCartQuantities();
@@ -53,8 +59,9 @@ function renderCategoryTabs() {
   allCategories.forEach(category => {
     const tab = document.createElement('button');
     tab.className = 'category-tab';
-    tab.innerHTML = `${categoryIcons[category.id] || '✨'} ${category.name}`;
-    tab.onclick = () => switchCategory(category.id, tab);
+    const catKey = category.key || category.id;
+    tab.innerHTML = `${categoryIcons[catKey] || '✨'} ${category.name}`;
+    tab.onclick = () => switchCategory(catKey, tab);
     tabsContainer.appendChild(tab);
   });
 }
@@ -78,12 +85,13 @@ function renderItems(searchQuery = '') {
   
   if (currentCategory === 'all') {
     allCategories.forEach(cat => {
-      itemsToShow = itemsToShow.concat(cat.items.map(item => ({...item, categoryId: cat.id})));
+      const catKey = cat.key || cat.id;
+      itemsToShow = itemsToShow.concat(cat.items.map(item => ({...item, categoryId: catKey})));
     });
   } else {
-    const category = allCategories.find(c => c.id === currentCategory);
+    const category = allCategories.find(c => (c.key || c.id) === currentCategory);
     if (category) {
-      itemsToShow = category.items.map(item => ({...item, categoryId: category.id}));
+      itemsToShow = category.items.map(item => ({...item, categoryId: (category.key || category.id)}));
     }
   }
   

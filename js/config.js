@@ -1,12 +1,10 @@
 // API Configuration
-// Update API_BASE_URL after deploying backend
-
 const API_CONFIG = {
-  // Backend API URL
-  BASE_URL: 'http://localhost:5000/api', // Change to production URL after deployment
+  // Backend API URL - Your backend is running locally
+  BASE_URL: 'http://localhost:5000/api',
   
-  // Razorpay Configuration
-  RAZORPAY_KEY_ID: 'rzp_test_YOUR_KEY_HERE', // Your Razorpay Key ID
+  // Razorpay Configuration (update with your actual key)
+  RAZORPAY_KEY_ID: 'rzp_test_dummy_key_for_now', // Update with real key from .env
   
   // Endpoints
   ENDPOINTS: {
