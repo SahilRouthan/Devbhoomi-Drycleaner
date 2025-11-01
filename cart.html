@@ -275,7 +275,7 @@
             <span>${item.quantity}</span>
             <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
           </div>
-          <button class="remove-btn" onclick="showRemoveConfirm('${item.id}')" title="Remove item">🗑️</button>
+          <button class="remove-btn" onclick="removeItem('${item.id}')" title="Remove item">🗑️</button>
         </div>
       `).join('');
       
@@ -311,26 +311,8 @@
       renderCart();
     }
     
-    function showRemoveConfirm(itemId) {
-      const controlsDiv = document.getElementById(`controls-${itemId}`);
-      if (!controlsDiv) return;
-      
-      // Replace controls with inline confirmation
-      controlsDiv.innerHTML = `
-        <div class="confirm-remove">
-          <span class="confirm-remove-text">Are you sure you want to remove this item?</span>
-          <button class="confirm-btn confirm-yes" onclick="confirmRemoveItem('${itemId}')">Yes</button>
-          <button class="confirm-btn confirm-no" onclick="cancelRemove('${itemId}')">No</button>
-        </div>
-      `;
-    }
-    
-    function confirmRemoveItem(itemId) {
+    function removeItem(itemId) {
       cart.removeItem(itemId);
-      renderCart();
-    }
-    
-    function cancelRemove(itemId) {
       renderCart();
     }
     
