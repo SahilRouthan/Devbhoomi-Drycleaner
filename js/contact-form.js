@@ -114,15 +114,44 @@
       // gather values
       const name = qv('name').trim();
       const email = qv('email').trim();
+      const phone = qv('phone').trim();
+      const pickupAddress = qv('pickup-address').trim();
       const message = qv('message').trim();
 
-      if (!name || !email || !message) {
-        const m = 'Please complete required fields.';
+      // Check if this is an order confirmation
+      const pendingOrder = localStorage.getItem('pendingOrder');
+      const isOrder = !!pendingOrder;
+
+      // Validation
+      if (!name) {
+        const m = 'Please enter your name.';
         statusEl.textContent = m;
         showToast(m, false);
         return;
       }
-      if (!emailIsValid(email)) {
+
+      if (!phone) {
+        const m = 'Please enter your mobile number.';
+        statusEl.textContent = m;
+        showToast(m, false);
+        return;
+      }
+
+      if (isOrder && !pickupAddress) {
+        const m = 'Please enter your pickup/delivery address.';
+        statusEl.textContent = m;
+        showToast(m, false);
+        return;
+      }
+
+      if (!isOrder && !email) {
+        const m = 'Please enter your email.';
+        statusEl.textContent = m;
+        showToast(m, false);
+        return;
+      }
+
+      if (email && !emailIsValid(email)) {
         const m = 'Please enter a valid email address.';
         statusEl.textContent = m;
         showToast(m, false);
@@ -133,19 +162,58 @@
 
       // UI lock
       setLoading(true);
-      statusEl.textContent = 'Sending your message...';
+      statusEl.textContent = isOrder ? 'Confirming your order...' : 'Sending your message...';
 
       // Simulate network; replace with real fetch() when backend available
       try {
         await new Promise(r => setTimeout(r, 900));
-        const success = 'Message sent — we will reply within 24 hours.';
-        statusEl.textContent = success;
-        showToast(success, true);
-        form.reset();
-        try { document.getElementById('name').focus(); } catch (e) {}
+        
+        if (isOrder) {
+          // Process order
+          const order = JSON.parse(pendingOrder);
+          const orderData = {
+            ...order,
+            customerName: name,
+            customerPhone: phone,
+            customerEmail: email,
+            pickupAddress: pickupAddress,
+            deliveryAddress: qv('delivery-address').trim() || pickupAddress,
+            confirmedAt: new Date().toISOString()
+          };
+
+          // Save confirmed order (in real app, send to server)
+          const orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+          orderHistory.push(orderData);
+          localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+
+          // Clear pending order and cart
+          localStorage.removeItem('pendingOrder');
+          localStorage.removeItem('dryCleaningCart');
+
+          const success = `✓ Order Confirmed!\n\nOrder ID: #${Date.now().toString().slice(-6)}\nWe'll contact you at ${phone} to schedule pickup.\n\nThank you for choosing Devbhoomi DryCleans!`;
+          statusEl.textContent = success;
+          showToast('Order confirmed successfully!', true);
+          
+          // Show detailed confirmation
+          alert(success);
+          
+          // Redirect to home after confirmation
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 2000);
+        } else {
+          // Regular contact form
+          const success = 'Message sent — we will reply within 24 hours.';
+          statusEl.textContent = success;
+          showToast(success, true);
+          form.reset();
+          try { document.getElementById('name').focus(); } catch (e) {}
+        }
       } catch (err) {
         console.error('contact-form send error', err);
-        const fail = 'Failed to send. Try again or contact via WhatsApp.';
+        const fail = isOrder 
+          ? 'Failed to confirm order. Please call us at +91 99588 43588.' 
+          : 'Failed to send. Try again or contact via WhatsApp.';
         statusEl.textContent = fail;
         showToast(fail, false);
       } finally {

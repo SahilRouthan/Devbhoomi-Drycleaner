@@ -12,12 +12,25 @@
   <!-- Hero / Intro -->
   <section class="hero hero-contact">
     <div class="hero-content" data-reveal>
-      <h1>Contact Us — Book a Pickup or Ask a Question</h1>
-      <p class="lead">Fast response, convenient pickup & delivery, and expert garment care. Call, chat or send us a message.</p>
+      <h1 id="hero-title">Contact Us — Book a Pickup or Ask a Question</h1>
+      <p class="lead" id="hero-subtitle">Fast response, convenient pickup & delivery, and expert garment care. Call, chat or send us a message.</p>
       <div class="cta-row">
         <a class="cta-button" href="#contact-form">Send Message</a>
         <a class="cta-button" href="#contact-info">Call / WhatsApp</a>
       </div>
+    </div>
+  </section>
+
+  <!-- Order Summary (shown only if coming from cart) -->
+  <section id="order-summary" class="container" style="display:none; padding: 24px 0;">
+    <div class="order-summary-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
+      <h2 style="margin: 0 0 16px; font-size: 24px;">📦 Order Summary</h2>
+      <div id="order-items" style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px; margin-bottom: 16px;"></div>
+      <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 600; padding-top: 12px; border-top: 2px solid rgba(255,255,255,0.3);">
+        <span>Total Amount:</span>
+        <span id="order-total">₹0</span>
+      </div>
+      <div id="order-payment-method" style="margin-top: 12px; padding: 12px; background: rgba(255,255,255,0.15); border-radius: 6px; text-align: center; font-size: 16px;"></div>
     </div>
   </section>
 
@@ -41,13 +54,13 @@
               <label class="sr-only" for="email">Email</label>
               <div class="input-group">
                 <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                <input class="input" id="email" name="email" type="email" placeholder="Email address" required autocomplete="email" />
+                <input class="input" id="email" name="email" type="email" placeholder="Email address (optional for orders)" autocomplete="email" />
               </div>
 
               <label class="sr-only" for="phone">Phone</label>
               <div class="input-group">
                 <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.05 15.05 0 006.6 6.6l1.9-1.9a1 1 0 011.1-.2 11.72 11.72 0 003.7 1.1 1 1 0 01.9 1V20a1 1 0 01-1 1C9.1 21 3 14.9 3 6a1 1 0 011-1h2.5a1 1 0 011 .9c.1 1.3.4 2.6 1.1 3.8a1 1 0 01-.2 1.1l-1.8 1.9z"/></svg>
-                <input class="input" id="phone" name="phone" placeholder="Phone (WhatsApp preferred)" autocomplete="tel" />
+                <input class="input" id="phone" name="phone" placeholder="Mobile Number (for order updates)" required autocomplete="tel" />
               </div>
             </div>
 
@@ -63,9 +76,9 @@
             </div>
 
             <!-- NEW: Pickup / Delivery Address fields -->
-            <label for="pickup-address" class="field-label">Pickup address</label>
+            <label for="pickup-address" class="field-label">Pickup & Delivery Address *</label>
             <div class="input-group">
-              <textarea class="textarea" id="pickup-address" name="pickup_address" rows="3" placeholder="Pickup address (house no, street, landmark, PIN)" required></textarea>
+              <textarea class="textarea" id="pickup-address" name="pickup_address" rows="3" placeholder="Complete address with house no., street, landmark, and PIN code" required></textarea>
             </div>
 
             <div class="delivery-toggle" style="margin:8px 0;">
@@ -154,9 +167,80 @@
   <script src="js/main.js"></script>
   <script src="js/contact-form.js"></script>
 
-  <!-- NEW: Toggle / copy pickup -> delivery behavior -->
+  <!-- Order Summary & Address Toggle -->
   <script>
     (function () {
+      // Check for pending order from cart
+      const pendingOrder = localStorage.getItem('pendingOrder');
+      if (pendingOrder) {
+        try {
+          const order = JSON.parse(pendingOrder);
+          displayOrderSummary(order);
+        } catch (e) {
+          console.error('Failed to parse order:', e);
+        }
+      }
+
+      function displayOrderSummary(order) {
+        const summarySection = document.getElementById('order-summary');
+        const itemsContainer = document.getElementById('order-items');
+        const totalEl = document.getElementById('order-total');
+        const paymentMethodEl = document.getElementById('order-payment-method');
+        const heroTitle = document.getElementById('hero-title');
+        const heroSubtitle = document.getElementById('hero-subtitle');
+
+        if (!summarySection) return;
+
+        // Update hero text
+        if (heroTitle) heroTitle.textContent = '✓ Almost Done! — Complete Your Order';
+        if (heroSubtitle) heroSubtitle.textContent = 'Please provide your details below to confirm your order and schedule pickup.';
+
+        // Build items list
+        let itemsHTML = '<div style="max-height: 200px; overflow-y: auto;">';
+        order.items.forEach(item => {
+          itemsHTML += `
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+              <span>${item.name} × ${item.quantity}</span>
+              <span>₹${(item.price * item.quantity).toFixed(2)}</span>
+            </div>
+          `;
+        });
+        itemsHTML += '</div>';
+
+        if (order.discount > 0) {
+          itemsHTML += `
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; color: #90EE90;">
+              <span>💰 Discount Applied</span>
+              <span>-₹${order.discount.toFixed(2)}</span>
+            </div>
+          `;
+        }
+
+        itemsContainer.innerHTML = itemsHTML;
+        totalEl.textContent = `₹${order.total.toFixed(2)}`;
+        
+        if (order.paymentMethod === 'cod') {
+          paymentMethodEl.innerHTML = '💵 Payment: <strong>Cash on Delivery</strong>';
+        } else if (order.paymentMethod === 'online' && order.paymentStatus === 'paid') {
+          paymentMethodEl.innerHTML = `✓ Payment: <strong>Paid Online</strong><br><small>Payment ID: ${order.paymentId}</small>`;
+        }
+
+        summarySection.style.display = 'block';
+
+        // Update service field
+        const serviceField = document.getElementById('service');
+        if (serviceField) {
+          serviceField.value = 'Pickup & Delivery';
+        }
+
+        // Update message field with order reference
+        const messageField = document.getElementById('message');
+        if (messageField && !messageField.value) {
+          messageField.value = `Order confirmation: ${order.items.length} item(s), Total: ₹${order.total.toFixed(2)}, Payment: ${order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Paid Online'}`;
+        }
+      }
+
+      // Toggle delivery address
       var same = document.getElementById('sameAddress');
       var deliveryGroup = document.getElementById('deliveryAddressGroup');
       var pickup = document.getElementById('pickup-address');
@@ -181,7 +265,6 @@
       }
     })();
   </script>
-  <!-- END NEW -->
 
 </body>
 </html>

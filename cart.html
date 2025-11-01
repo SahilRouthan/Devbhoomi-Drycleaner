@@ -442,6 +442,7 @@
 
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
     function renderCart() {
       const container = document.getElementById('cart-content');
@@ -599,22 +600,10 @@
               <div class="payment-desc">Pay when we deliver</div>
             </div>
             
-            <div class="payment-method" onclick="selectPayment('upi')" id="payment-upi">
-              <div class="payment-icon">📱</div>
-              <div class="payment-name">UPI Payment</div>
-              <div class="payment-desc">PhonePe, GPay, Paytm</div>
-            </div>
-            
-            <div class="payment-method" onclick="selectPayment('card')" id="payment-card">
+            <div class="payment-method" onclick="selectPayment('online')" id="payment-online">
               <div class="payment-icon">💳</div>
-              <div class="payment-name">Debit/Credit Card</div>
-              <div class="payment-desc">Visa, Master, Rupay</div>
-            </div>
-            
-            <div class="payment-method" onclick="selectPayment('netbanking')" id="payment-netbanking">
-              <div class="payment-icon">🏦</div>
-              <div class="payment-name">Net Banking</div>
-              <div class="payment-desc">All major banks</div>
+              <div class="payment-name">Pay Online</div>
+              <div class="payment-desc">UPI, Cards, Net Banking, Wallets</div>
             </div>
           </div>
           
@@ -650,6 +639,9 @@
     
     let selectedPaymentMethod = null;
     
+    // Razorpay configuration
+    const RAZORPAY_KEY = 'rzp_test_YOUR_KEY_HERE'; // Replace with your actual Razorpay key
+    
     function selectPayment(method) {
       selectedPaymentMethod = method;
       
@@ -681,51 +673,22 @@
           `;
           break;
           
-        case 'upi':
+        case 'online':
           detailsHTML = `
-            <div class="payment-details-title">📱 Pay via UPI</div>
-            <div class="upi-info">
-              <p style="color: #6b7280; margin-bottom: 10px;">Scan QR code or use UPI ID:</p>
-              <div class="upi-id">devbhoomidrycleaner@upi</div>
-              <div class="qr-code">
-                <div class="qr-placeholder">📷<br><span style="font-size: 0.9rem;">QR Code</span></div>
-              </div>
-              <div class="payment-note">
-                After payment, click "Place Order" below
-              </div>
-            </div>
-          `;
-          break;
-          
-        case 'card':
-          detailsHTML = `
-            <div class="payment-details-title">💳 Card Payment</div>
+            <div class="payment-details-title">� Pay Online via Razorpay</div>
             <p style="color: #6b7280; margin-bottom: 15px;">
-              You'll be redirected to secure payment gateway after placing order.
+              Secure payment powered by Razorpay. Choose from multiple payment options.
             </p>
             <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
-              <div style="font-weight: 600; margin-bottom: 10px;">Accepted Cards:</div>
-              <div style="display: flex; gap: 10px; font-size: 2rem;">
-                💳 💳 💳
+              <div style="font-weight: 600; margin-bottom: 10px;">Accepted Payment Methods:</div>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 0.9rem; color: #6b7280;">
+                <div>📱 UPI (PhonePe, GPay, Paytm)</div>
+                <div>💳 Credit/Debit Cards</div>
+                <div>🏦 Net Banking</div>
+                <div>💰 Wallets (Paytm, PhonePe)</div>
               </div>
-              <div style="font-size: 0.85rem; color: #6b7280; margin-top: 10px;">
-                Visa • Mastercard • Rupay • American Express
-              </div>
-            </div>
-          `;
-          break;
-          
-        case 'netbanking':
-          detailsHTML = `
-            <div class="payment-details-title">🏦 Net Banking</div>
-            <p style="color: #6b7280; margin-bottom: 15px;">
-              You'll be redirected to your bank's secure login page after placing order.
-            </p>
-            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
-              <div style="font-weight: 600; margin-bottom: 10px;">Supported Banks:</div>
-              <div style="font-size: 0.9rem; color: #6b7280; line-height: 1.8;">
-                SBI • HDFC • ICICI • Axis Bank • PNB<br>
-                Kotak • Yes Bank • and 50+ more banks
+              <div style="background: #ecfdf5; padding: 10px; border-radius: 6px; margin-top: 15px; color: #059669; font-size: 0.85rem;">
+                🔒 Secure payment gateway • SSL encrypted • PCI DSS compliant
               </div>
             </div>
           `;
@@ -762,7 +725,7 @@
       
       const total = subtotal - discount;
       
-      // Store order details in localStorage for contact page
+      // Store order details
       const orderDetails = {
         items: items,
         subtotal: subtotal,
@@ -772,10 +735,63 @@
         timestamp: new Date().toISOString()
       };
       
-      localStorage.setItem('pendingOrder', JSON.stringify(orderDetails));
+      if (selectedPaymentMethod === 'cod') {
+        // For COD, redirect to contact page for address
+        localStorage.setItem('pendingOrder', JSON.stringify(orderDetails));
+        window.location.href = 'contact.html';
+      } else if (selectedPaymentMethod === 'online') {
+        // For online payment, open Razorpay
+        initiateRazorpayPayment(orderDetails);
+      }
+    }
+    
+    function initiateRazorpayPayment(orderDetails) {
+      const options = {
+        key: RAZORPAY_KEY,
+        amount: orderDetails.total * 100, // Amount in paise (₹1 = 100 paise)
+        currency: 'INR',
+        name: 'Devbhoomi DryCleans',
+        description: `Dry Cleaning Service (${orderDetails.items.length} items)`,
+        image: 'https://your-logo-url.com/logo.png', // Add your logo URL
+        handler: function(response) {
+          // Payment successful
+          orderDetails.paymentId = response.razorpay_payment_id;
+          orderDetails.paymentStatus = 'paid';
+          
+          // Store order with payment details
+          localStorage.setItem('pendingOrder', JSON.stringify(orderDetails));
+          
+          // Show success and redirect
+          alert('Payment Successful! ✓\nPayment ID: ' + response.razorpay_payment_id);
+          
+          // Clear cart
+          cart.clearCart();
+          
+          // Redirect to contact page for address details
+          window.location.href = 'contact.html';
+        },
+        prefill: {
+          name: '',
+          email: '',
+          contact: ''
+        },
+        notes: {
+          order_type: 'dry_cleaning',
+          items_count: orderDetails.items.length,
+          discount: orderDetails.discount
+        },
+        theme: {
+          color: '#667eea'
+        },
+        modal: {
+          ondismiss: function() {
+            alert('Payment cancelled. You can retry from cart page.');
+          }
+        }
+      };
       
-      // Redirect to contact page for address and confirmation
-      window.location.href = 'contact.html';
+      const razorpay = new Razorpay(options);
+      razorpay.open();
     }
     
     // Listen for cart changes

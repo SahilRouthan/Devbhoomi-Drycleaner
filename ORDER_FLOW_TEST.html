@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COD Order Flow - Test Guide</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+      background: #f5f5f5;
+    }
+    h1 { color: #667eea; }
+    h2 { color: #764ba2; margin-top: 30px; }
+    .step {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .step-number {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 32px;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .required {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+    .optional {
+      color: #95a5a6;
+      font-style: italic;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background: #764ba2;
+    }
+    .info-box {
+      background: #e8f4f8;
+      border-left: 4px solid #3498db;
+      padding: 15px;
+      margin: 15px 0;
+    }
+    .success-box {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 15px;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛒 COD Order Flow - Complete Guide</h1>
+  <p>This document shows the complete customer journey for Cash on Delivery orders.</p>
+
+  <div class="step">
+    <h2><span class="step-number">1</span>Browse Items (pricing.html)</h2>
+    <p>Customer visits the pricing page and adds items to cart:</p>
+    <ul>
+      <li>Search for items using the search box</li>
+      <li>Filter by category (Men's, Women's, Home, Kids)</li>
+      <li>Click <strong>+</strong> button to add items</li>
+      <li>Cart badge in header updates automatically</li>
+    </ul>
+    <a href="pricing.html" class="button">→ Go to Pricing Page</a>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-number">2</span>Review Cart (cart.html)</h2>
+    <p>Customer clicks cart icon and reviews their order:</p>
+    <ul>
+      <li>See all items with quantities</li>
+      <li>Adjust quantities using +/- buttons</li>
+      <li>Remove items if needed</li>
+      <li><strong>Auto Discounts Applied:</strong>
+        <ul>
+          <li>₹250 off at ₹1,000</li>
+          <li>₹500 off at ₹2,000</li>
+          <li>₹750 off at ₹3,000</li>
+          <li>₹1,000 off at ₹4,000</li>
+        </ul>
+      </li>
+    </ul>
+    <div class="info-box">
+      <strong>Payment Selection:</strong><br>
+      Choose between:
+      <ul>
+        <li><strong>💵 Cash on Delivery</strong> - Pay when items are delivered</li>
+        <li><strong>💳 Pay Online</strong> - Pay now via Razorpay (UPI/Card/NetBanking/Wallet)</li>
+      </ul>
+    </div>
+    <a href="cart.html" class="button">→ Go to Cart Page</a>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-number">3</span>Provide Details (contact.html)</h2>
+    <p>After clicking "Place Order", customer is taken to contact page with order summary.</p>
+    
+    <h3>Order Summary Shows:</h3>
+    <ul>
+      <li>All items with quantities and prices</li>
+      <li>Discount amount (if any)</li>
+      <li>Total amount to pay</li>
+      <li>Payment method selected</li>
+    </ul>
+
+    <h3>Customer Must Fill:</h3>
+    <ul>
+      <li><span class="required">* Name</span> - Full name</li>
+      <li><span class="required">* Mobile Number</span> - For pickup coordination</li>
+      <li><span class="required">* Address</span> - Complete pickup/delivery address with PIN</li>
+      <li><span class="optional">Email (optional)</span> - For order confirmations</li>
+    </ul>
+
+    <div class="info-box">
+      <strong>Address Tips:</strong>
+      <ul>
+        <li>Include house/flat number</li>
+        <li>Mention nearby landmark</li>
+        <li>Add PIN code</li>
+        <li>Optionally provide different delivery address</li>
+      </ul>
+    </div>
+    <a href="contact.html" class="button">→ Go to Contact Page</a>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-number">4</span>Order Confirmed ✓</h2>
+    <div class="success-box">
+      <strong>Success!</strong> Order is confirmed with:
+      <ul>
+        <li>Unique Order ID (e.g., #482619)</li>
+        <li>Confirmation message with total amount</li>
+        <li>SMS/Call confirmation (coming soon)</li>
+      </ul>
+    </div>
+    
+    <h3>What Happens Next:</h3>
+    <ul>
+      <li>Order saved to order history</li>
+      <li>Cart automatically cleared</li>
+      <li>Customer redirected to homepage</li>
+      <li>Shop will contact customer to schedule pickup</li>
+      <li>Items picked up, cleaned, and delivered</li>
+      <li><strong>Payment collected on delivery (COD)</strong></li>
+    </ul>
+  </div>
+
+  <hr style="margin: 40px 0;">
+
+  <h2>🔧 Technical Details</h2>
+  
+  <div class="step">
+    <h3>Data Storage (localStorage)</h3>
+    <p>Three keys are used to manage orders:</p>
+    <ol>
+      <li><code>dryCleaningCart</code> - Active shopping cart items</li>
+      <li><code>pendingOrder</code> - Order waiting for customer details</li>
+      <li><code>orderHistory</code> - All confirmed orders</li>
+    </ol>
+  </div>
+
+  <div class="step">
+    <h3>Key Files</h3>
+    <ul>
+      <li><code>pricing.html</code> - Browse and add items</li>
+      <li><code>js/pricing.js</code> - Quick-add functionality</li>
+      <li><code>cart.html</code> - Cart management and payment selection</li>
+      <li><code>js/cart.js</code> - Cart operations (add/remove/update)</li>
+      <li><code>contact.html</code> - Order completion form</li>
+      <li><code>js/contact-form.js</code> - Form validation and order processing</li>
+    </ul>
+  </div>
+
+  <hr style="margin: 40px 0;">
+
+  <h2>🚀 Test the Flow</h2>
+  <div class="step">
+    <p>Follow these steps to test the complete COD order flow:</p>
+    <ol>
+      <li>Click "Go to Pricing Page" above</li>
+      <li>Add 3-4 items to cart (try to reach ₹1000+ for discount)</li>
+      <li>Click cart icon in header</li>
+      <li>Select "Cash on Delivery"</li>
+      <li>Click "Place Order"</li>
+      <li>Fill your details on contact page</li>
+      <li>Submit and see confirmation!</li>
+    </ol>
+    
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="pricing.html" class="button" style="font-size: 18px; padding: 15px 30px;">
+        🛍️ Start Shopping Now
+      </a>
+    </div>
+  </div>
+
+  <hr style="margin: 40px 0;">
+  
+  <p style="text-align: center; color: #888; font-size: 14px;">
+    Devbhoomi DryCleans - Quality Dry Cleaning & Laundry Services<br>
+    <a href="index.html">← Back to Home</a>
+  </p>
+
+</body>
+</html>
