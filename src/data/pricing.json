@@ -1,0 +1,70 @@
+{
+  "categories": [
+    {
+      "id": "mens",
+      "name": "Men's Dryclean Items",
+      "items": [
+        { "id": "mens-shirts", "name": "Shirts", "price": 120 },
+        { "id": "mens-pants", "name": "Pants", "price": 150 },
+        { "id": "mens-tshirts", "name": "T-Shirts", "price": 100 },
+        { "id": "mens-denims", "name": "Denims", "price": 150 },
+        { "id": "mens-trousers", "name": "Trousers & Lowers", "price": 150 },
+        { "id": "mens-upper-sweatshirts", "name": "Upper & Sweatshirts", "price": 160 },
+        { "id": "mens-cabry-gym", "name": "Cabry & Gym Shorts", "price": 120 },
+        { "id": "mens-gym-tshirts", "name": "Gym T-Shirts", "price": 80 },
+        { "id": "mens-coat-pant", "name": "Coat & Pant", "price": 300 },
+        { "id": "mens-only-coat", "name": "Only Coat", "price": 150 },
+        { "id": "mens-jacket", "name": "Jacket", "price": 200 },
+        { "id": "mens-leather-jacket", "name": "Leather Jacket", "price": 500 },
+        { "id": "mens-tie", "name": "Tie", "price": 30 }
+      ]
+    },
+    {
+      "id": "womens",
+      "name": "Women's Dryclean Items",
+      "items": [
+        { "id": "womens-shirt", "name": "Ladies Shirt", "price": 100 },
+        { "id": "womens-pant", "name": "Ladies Pant", "price": 125 },
+        { "id": "womens-tshirts", "name": "Ladies T-Shirts", "price": 80 },
+        { "id": "womens-denims", "name": "Ladies Denims", "price": 150 },
+        { "id": "womens-lowers", "name": "Ladies Lowers", "price": 150 },
+        { "id": "womens-upper-sweatshirts", "name": "Ladies Upper & Sweatshirts", "price": 160 },
+        { "id": "womens-gym-atire", "name": "Ladies Gym Atire", "price": 250, "note": "& as per work" },
+        { "id": "womens-suit-3pease", "name": "Ladies Suit 3 Pease (Kurta, Pajama, Chuni)", "price": 250, "note": "& as per work" },
+        { "id": "womens-kurti", "name": "Ladies Kurti", "price": 100 },
+        { "id": "womens-saree-plain", "name": "Ladies Saree Plain", "price": 200, "note": "& as per work" },
+        { "id": "womens-saree-heavy", "name": "Ladies Saree Work Heavy", "price": 250, "note": "& as per work" },
+        { "id": "womens-lehnga", "name": "Lehnga", "price": 350, "note": "& as per work" }
+      ]
+    },
+    {
+      "id": "home",
+      "name": "Home Dryclean Items",
+      "items": [
+        { "id": "home-single-blanket", "name": "Single Bed Blanket", "price": 200 },
+        { "id": "home-single-blanket-2sheds", "name": "Single Bed Blanket with 2 Sheds", "price": 300 },
+        { "id": "home-double-blanket", "name": "Double Bed Blanket", "price": 300 },
+        { "id": "home-double-blanket-2sheds", "name": "Double Bed Blanket with 2 Shades", "price": 400 },
+        { "id": "home-single-quilts", "name": "Single Bed Quilts", "price": 200 },
+        { "id": "home-double-quilts", "name": "Double Bed Quilts", "price": 300 },
+        { "id": "home-single-sheet", "name": "Single Bed Sheet", "price": 150 },
+        { "id": "home-double-sheet", "name": "Double Bed Sheet", "price": 225 },
+        { "id": "home-cushion-covers", "name": "Cushion Covers", "price": 50, "unit": "per piece" },
+        { "id": "home-shower-towel", "name": "Big Shower Towel", "price": 120, "unit": "per piece" },
+        { "id": "home-napkin-towel", "name": "Napkin Towel", "price": 50, "unit": "per piece" },
+        { "id": "home-curtains-soffa", "name": "Curtains & Soffa", "price": 0, "note": "Prices will be as per sq foot & conditions" }
+      ]
+    },
+    {
+      "id": "kids",
+      "name": "Kids Items Dryclean",
+      "items": [
+        { "id": "kids-school-dress", "name": "School Dress", "price": 100 },
+        { "id": "kids-school-coat", "name": "School Coat", "price": 150 },
+        { "id": "kids-school-bag", "name": "School Bag", "price": 150 },
+        { "id": "kids-3pease-set", "name": "Kids 3 Pease Coat Pant & Wascut", "price": 200 },
+        { "id": "kids-shirt-pant", "name": "Kids Shirt & Pant", "price": 100 }
+      ]
+    }
+  ]
+}

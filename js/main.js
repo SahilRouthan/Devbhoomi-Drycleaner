@@ -13,10 +13,15 @@
       <nav class="nav" role="navigation" aria-label="Primary">
         <a href="#contact">Contact</a>
         <a href="services.html">Services</a>
+        <a href="pricing.html">Pricing</a>
         <a href="gallery.html">Gallery</a>
         <a href="offers.html">Offers</a>
       </nav>
       <div style="display:flex;gap:10px;align-items:center">
+        <a href="cart.html" style="position:relative;text-decoration:none;font-size:24px;display:flex;align-items:center" title="Shopping Cart">
+          🛒
+          <span class="cart-badge" style="display:none;position:absolute;top:-8px;right:-8px;background:#ef4444;color:white;width:18px;height:18px;border-radius:50%;font-size:0.65rem;font-weight:700;align-items:center;justify-content:center">0</span>
+        </a>
         <a class="header-cta" href="contact.html">Book Now</a>
         <button id="mobile-menu-toggle" aria-label="Open menu" style="display:none;border:0;background:transparent;font-size:22px">☰</button>
       </div>

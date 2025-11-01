@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Price List - Devbhoomi Dry Cleaning</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    .pricing-hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .pricing-hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .pricing-hero p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+    .pricing-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .category-section {
+      margin-bottom: 50px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .category-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 25px;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 25px;
+    }
+    .item-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .item-card:hover {
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+      transform: translateY(-2px);
+    }
+    .item-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+    .item-price {
+      font-size: 1.5rem;
+      color: #667eea;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .item-note {
+      font-size: 0.85rem;
+      color: #6b7280;
+      font-style: italic;
+      margin-bottom: 15px;
+    }
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .quantity-control button {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #d1d5db;
+      background: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .quantity-control button:hover {
+      background: #f3f4f6;
+      border-color: #667eea;
+    }
+    .quantity-control input {
+      width: 50px;
+      text-align: center;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      padding: 6px;
+      font-size: 1rem;
+    }
+    .add-to-cart-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+    .add-to-cart-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    .add-to-cart-btn:active {
+      transform: translateY(0);
+    }
+    .add-to-cart-btn.added {
+      background: #10b981;
+    }
+    .cart-float-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 1.5rem;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+    .cart-float-btn:hover {
+      transform: scale(1.1);
+    }
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ef4444;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    @media (max-width: 768px) {
+      .pricing-hero h1 {
+        font-size: 2rem;
+      }
+      .items-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <section class="pricing-hero">
+    <h1>Our Pricing</h1>
+    <p>Transparent pricing for all our dry cleaning services</p>
+  </section>
+
+  <div class="pricing-container">
+    <div id="pricing-content"></div>
+  </div>
+
+  <a href="cart.html" class="cart-float-btn" id="cartFloatBtn">
+    🛒
+    <span class="cart-badge" id="cartBadge">0</span>
+  </a>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/pricing.js"></script>
+</body>
+</html>

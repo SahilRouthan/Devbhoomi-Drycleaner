@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart - Devbhoomi Dry Cleaning</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    .cart-hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .cart-hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .cart-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+      min-height: 400px;
+    }
+    .cart-empty {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .cart-empty h2 {
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+    .cart-empty-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 30px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    .cart-items {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+    .cart-item {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 20px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+    .item-details h3 {
+      font-size: 1.1rem;
+      color: #1f2937;
+      margin-bottom: 5px;
+    }
+    .item-details p {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+    .item-price {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #667eea;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f3f4f6;
+      padding: 5px;
+      border-radius: 6px;
+    }
+    .quantity-controls button {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .quantity-controls button:hover {
+      background: #667eea;
+      color: white;
+    }
+    .quantity-controls span {
+      min-width: 30px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 1.5rem;
+      padding: 5px 10px;
+      transition: all 0.2s;
+    }
+    .remove-btn:hover {
+      transform: scale(1.2);
+    }
+    .cart-summary {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 25px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .summary-row:last-child {
+      border-bottom: none;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #667eea;
+      padding-top: 20px;
+    }
+    .summary-label {
+      color: #6b7280;
+    }
+    .summary-value {
+      font-weight: 600;
+      color: #1f2937;
+    }
+    .cart-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+    }
+    .cart-actions button,
+    .cart-actions a {
+      flex: 1;
+    }
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #1f2937;
+    }
+    .btn-secondary:hover {
+      background: #e5e7eb;
+      box-shadow: none;
+    }
+    .btn-clear {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    .btn-clear:hover {
+      background: #fecaca;
+      box-shadow: none;
+    }
+    @media (max-width: 768px) {
+      .cart-hero h1 {
+        font-size: 2rem;
+      }
+      .cart-item {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      .cart-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <section class="cart-hero">
+    <h1>🛒 Shopping Cart</h1>
+  </section>
+
+  <div class="cart-container">
+    <div id="cart-content">
+      <!-- Cart items will be rendered here -->
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    function renderCart() {
+      const container = document.getElementById('cart-content');
+      const items = cart.getItems();
+      
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="cart-empty">
+            <div class="cart-empty-icon">🛒</div>
+            <h2>Your cart is empty</h2>
+            <p style="color: #6b7280; margin-bottom: 30px;">Add items from our pricing page to get started!</p>
+            <a href="pricing.html" class="btn-primary">Browse Pricing</a>
+          </div>
+        `;
+        return;
+      }
+      
+      const itemsHTML = items.map(item => `
+        <div class="cart-item">
+          <div class="item-details">
+            <h3>${item.name}</h3>
+            <p>₹${item.price}/- per item</p>
+          </div>
+          <div class="item-price">₹${item.price * item.quantity}/-</div>
+          <div class="quantity-controls">
+            <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})">−</button>
+            <span>${item.quantity}</span>
+            <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+          </div>
+          <button class="remove-btn" onclick="removeItem('${item.id}')" title="Remove item">🗑️</button>
+        </div>
+      `).join('');
+      
+      const total = cart.getTotal();
+      const itemCount = cart.getItemCount();
+      
+      container.innerHTML = `
+        <div class="cart-items">
+          ${itemsHTML}
+        </div>
+        
+        <div class="cart-summary">
+          <div class="summary-row">
+            <span class="summary-label">Total Items:</span>
+            <span class="summary-value">${itemCount}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Total Amount:</span>
+            <span class="summary-value">₹${total.toFixed(2)}/-</span>
+          </div>
+          
+          <div class="cart-actions">
+            <a href="pricing.html" class="btn-primary btn-secondary">Continue Shopping</a>
+            <a href="contact.html" class="btn-primary">Proceed to Checkout</a>
+            <button onclick="clearCart()" class="btn-primary btn-clear">Clear Cart</button>
+          </div>
+        </div>
+      `;
+    }
+    
+    function updateQuantity(itemId, newQuantity) {
+      cart.updateQuantity(itemId, newQuantity);
+      renderCart();
+    }
+    
+    function removeItem(itemId) {
+      if (confirm('Remove this item from cart?')) {
+        cart.removeItem(itemId);
+        renderCart();
+      }
+    }
+    
+    function clearCart() {
+      if (confirm('Clear all items from cart?')) {
+        cart.clearCart();
+        renderCart();
+      }
+    }
+    
+    // Listen for cart changes
+    cart.onChange(renderCart);
+    
+    // Initial render
+    document.addEventListener('DOMContentLoaded', renderCart);
+  </script>
+</body>
+</html>
