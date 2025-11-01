@@ -178,10 +178,14 @@
     }
     .summary-row:last-child {
       border-bottom: none;
+    }
+    .summary-row.total-row {
       font-size: 1.3rem;
       font-weight: 700;
       color: #667eea;
       padding-top: 20px;
+      border-top: 2px solid #667eea;
+      margin-top: 10px;
     }
     .summary-label {
       color: #6b7280;
@@ -189,6 +193,75 @@
     .summary-value {
       font-weight: 600;
       color: #1f2937;
+    }
+    .discount-row {
+      background: #ecfdf5;
+      padding: 12px 15px;
+      margin: 0 -15px;
+      border-radius: 8px;
+    }
+    .discount-row .summary-label {
+      color: #059669;
+      font-weight: 700;
+    }
+    .discount-row .summary-value {
+      color: #059669;
+      font-weight: 700;
+    }
+    .discount-badge {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .discount-badge-title {
+      font-size: 0.9rem;
+      opacity: 0.95;
+      margin-bottom: 5px;
+    }
+    .discount-badge-amount {
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+    .discount-tiers {
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border: 2px dashed #cbd5e1;
+    }
+    .discount-tiers-title {
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+    .discount-tier {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+    .discount-tier.active {
+      color: #10b981;
+      font-weight: 700;
+    }
+    .discount-tier.next {
+      color: #3b82f6;
+      font-weight: 600;
+    }
+    .savings-note {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      border-left: 3px solid #f59e0b;
     }
     .cart-actions {
       display: flex;
@@ -279,8 +352,80 @@
         </div>
       `).join('');
       
-      const total = cart.getTotal();
+      const subtotal = cart.getTotal();
       const itemCount = cart.getItemCount();
+      
+      // Calculate discount based on tiers
+      const discountTiers = [
+        { min: 4000, discount: 1000 },
+        { min: 3000, discount: 750 },
+        { min: 2000, discount: 500 },
+        { min: 1000, discount: 250 }
+      ];
+      
+      let discount = 0;
+      let appliedTier = null;
+      for (const tier of discountTiers) {
+        if (subtotal >= tier.min) {
+          discount = tier.discount;
+          appliedTier = tier;
+          break;
+        }
+      }
+      
+      const total = subtotal - discount;
+      
+      // Find next tier
+      let nextTier = null;
+      for (const tier of discountTiers.reverse()) {
+        if (subtotal < tier.min) {
+          nextTier = tier;
+          break;
+        }
+      }
+      discountTiers.reverse(); // Restore order
+      
+      // Build discount badge if applicable
+      let discountBadgeHTML = '';
+      if (discount > 0) {
+        discountBadgeHTML = `
+          <div class="discount-badge">
+            <div class="discount-badge-title">🎉 Congratulations! Discount Applied</div>
+            <div class="discount-badge-amount">Save ₹${discount}/-</div>
+          </div>
+        `;
+      }
+      
+      // Build savings note if close to next tier
+      let savingsNoteHTML = '';
+      if (nextTier) {
+        const amountNeeded = nextTier.min - subtotal;
+        const additionalSavings = nextTier.discount - discount;
+        savingsNoteHTML = `
+          <div class="savings-note">
+            💡 Add ₹${amountNeeded}/- more to save an additional ₹${additionalSavings}/- (Total: ₹${nextTier.discount}/- off)
+          </div>
+        `;
+      }
+      
+      // Build discount tiers display
+      const tiersHTML = discountTiers.map(tier => {
+        let className = 'discount-tier';
+        let icon = '○';
+        if (appliedTier && tier.min === appliedTier.min) {
+          className += ' active';
+          icon = '✓';
+        } else if (nextTier && tier.min === nextTier.min) {
+          className += ' next';
+          icon = '→';
+        }
+        return `
+          <div class="${className}">
+            <span>${icon} Spend ₹${tier.min}/- or more</span>
+            <span>Get ₹${tier.discount}/- off</span>
+          </div>
+        `;
+      }).join('');
       
       container.innerHTML = `
         <div class="cart-items">
@@ -288,11 +433,29 @@
         </div>
         
         <div class="cart-summary">
+          ${discountBadgeHTML}
+          ${savingsNoteHTML}
+          
+          <div class="discount-tiers">
+            <div class="discount-tiers-title">🎁 Discount Offers</div>
+            ${tiersHTML}
+          </div>
+          
           <div class="summary-row">
             <span class="summary-label">Total Items:</span>
             <span class="summary-value">${itemCount}</span>
           </div>
           <div class="summary-row">
+            <span class="summary-label">Subtotal:</span>
+            <span class="summary-value">₹${subtotal.toFixed(2)}/-</span>
+          </div>
+          ${discount > 0 ? `
+          <div class="summary-row discount-row">
+            <span class="summary-label">🎉 Discount Applied:</span>
+            <span class="summary-value">- ₹${discount.toFixed(2)}/-</span>
+          </div>
+          ` : ''}
+          <div class="summary-row total-row">
             <span class="summary-label">Total Amount:</span>
             <span class="summary-value">₹${total.toFixed(2)}/-</span>
           </div>
