@@ -1,0 +1,13 @@
+:root {
+    --primary-color: #4CAF50; /* Green */
+    --secondary-color: #FFFFFF; /* White */
+    --accent-color: #FFC107; /* Amber */
+    --text-color: #333333; /* Dark Gray */
+    --background-color: #F5F5F5; /* Light Gray */
+    --font-family: 'Arial', sans-serif;
+    --font-size-base: 16px;
+    --font-size-large: 24px;
+    --font-size-small: 14px;
+    --border-radius: 5px;
+    --transition-speed: 0.3s;
+}

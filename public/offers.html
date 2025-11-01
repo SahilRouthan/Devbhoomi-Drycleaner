@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Offers - Devbhoomi DryCleans</title>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <section class="hero hero-offers">
+    <div class="hero-content" data-reveal>
+      <h1>Limited Time Offers</h1>
+      <p class="lead">Smart savings for clean clothes — claim coupons, track availability, and book instantly.</p>
+      <div class="cta-row">
+        <a class="cta-button" href="#offers-grid">See Offers</a>
+      </div>
+    </div>
+  </section>
+
+  <main class="container" style="padding:28px 18px;">
+    <div class="offers-top" data-reveal>
+      <div class="offers-countdown">
+        <strong>Flash Sale ends in</strong>
+        <div id="offers-countdown" class="countdown">00:00:00</div>
+      </div>
+
+      <div class="offers-actions">
+        <button id="filter-all" class="chip active">All</button>
+        <button id="filter-discount" class="chip">Discounts</button>
+        <button id="filter-bundle" class="chip">Bundles</button>
+        <button id="filter-new" class="chip">New</button>
+      </div>
+    </div>
+
+    <section id="offers-grid" class="offers-grid" aria-live="polite" data-reveal>
+      <!-- Offer cards injected by js/offers.js -->
+    </section>
+
+    <div style="margin-top:22px;text-align:center">
+      <a href="contact.html" class="learn-more">Need a custom offer? Contact us</a>
+    </div>
+  </main>
+
+  <!-- Redeem modal -->
+  <div id="redeem-modal" class="modal" aria-hidden="true" style="display:none;">
+    <div class="modal-panel" role="document">
+      <button class="modal-close" aria-label="Close redeem dialog">✕</button>
+      <h2 id="redeem-title">Redeem Offer</h2>
+      <div id="redeem-body">
+        <p id="redeem-offer-title"></p>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <input id="redeem-name" class="input" placeholder="Your name" />
+          <input id="redeem-phone" class="input" placeholder="Phone / WhatsApp" />
+        </div>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
+          <button id="redeem-submit" class="contact-button primary">Claim & Book</button>
+          <button id="redeem-copy" class="contact-button">Copy Code</button>
+          <div id="redeem-status" class="form-status" style="margin-left:8px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/main.js"></script>
+  <script src="js/offers.js"></script>
+</body>
+</html>

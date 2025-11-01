@@ -1,0 +1,70 @@
+html
+/* Layout styles for the dry-cleaning website */
+
+body {
+    margin: 0;
+    font-family: var(--font-family, Arial, sans-serif);
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header, .footer {
+    background-color: var(--color-primary, #f8f9fa);
+    padding: 20px 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav {
+    display: flex;
+    gap: 20px;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+.section {
+    margin-bottom: 40px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: var(--color-secondary, #007bff);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: var(--color-secondary-dark, #0056b3);
+}
+
+.footer {
+    text-align: center;
+    padding: 20px 0;
+}

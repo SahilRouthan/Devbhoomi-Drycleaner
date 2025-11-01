@@ -1,0 +1,22 @@
+[
+    {
+        "name": "John Doe",
+        "review": "The service was exceptional! My clothes have never looked better. Highly recommend!"
+    },
+    {
+        "name": "Jane Smith",
+        "review": "I love the eco-friendly approach they take. It's great to see a business that cares about the environment."
+    },
+    {
+        "name": "Michael Johnson",
+        "review": "Fast and reliable service. They always deliver on time and my garments are treated with care."
+    },
+    {
+        "name": "Emily Davis",
+        "review": "The best dry-cleaning experience I've ever had! The staff is friendly and professional."
+    },
+    {
+        "name": "Chris Lee",
+        "review": "I appreciate the loyalty program. It's nice to be rewarded for being a regular customer."
+    }
+]

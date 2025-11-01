@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gallery - Devbhoomi DryCleans</title>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <section class="hero hero-gallery">
+    <div class="hero-content" data-reveal>
+      <h1>Our Work — Before & After</h1>
+      <p class="lead">See how we restore garments, shoes and home textiles — swipe, zoom, and explore.</p>
+      <div class="cta-row">
+        <a class="cta-button" href="#gallery-grid">View Gallery</a>
+      </div>
+    </div>
+  </section>
+
+  <main class="container" style="padding:28px 20px;">
+    <div class="controls" data-reveal>
+      <div class="filters" role="tablist" aria-label="Gallery filters">
+        <button class="chip active" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="chip" data-filter="before" role="tab">Before</button>
+        <button class="chip" data-filter="after" role="tab">After</button>
+        <button class="chip" data-filter="clothing" role="tab">Clothing</button>
+        <button class="chip" data-filter="accessories" role="tab">Accessories</button>
+      </div>
+
+      <div class="gallery-actions">
+        <button id="toggle-layout" class="chip" title="Toggle layout">Masonry</button>
+        <button id="start-slideshow" class="chip" title="Start slideshow">Slideshow</button>
+      </div>
+    </div>
+
+    <section id="gallery-grid" class="gallery-grid" aria-live="polite">
+      <!-- Images injected by js/gallery.js -->
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div id="gallery-lightbox" class="lightbox" aria-hidden="true" style="display:none;">
+    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="Image viewer">
+      <button id="lb-close" class="lb-close" aria-label="Close">✕</button>
+      <button id="lb-prev" class="lb-nav lb-prev" aria-label="Previous">‹</button>
+      <button id="lb-next" class="lb-nav lb-next" aria-label="Next">›</button>
+      <div class="lb-content">
+        <img id="lb-img" src="" alt="" />
+        <div id="lb-caption" class="lb-caption"></div>
+      </div>
+      <div class="lb-actions">
+        <button id="lb-download" class="chip">Download</button>
+        <button id="lb-full" class="chip">Fullscreen</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/main.js"></script>
+  <script src="js/gallery.js"></script>
+</body>
+</html>

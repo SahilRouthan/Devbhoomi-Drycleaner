@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Services - Devbhoomi DryCleans</title>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <section class="hero hero-services">
+    <div class="hero-content" data-reveal>
+      <h1>Services Designed For Your Lifestyle</h1>
+      <p class="lead">Premium care, eco-friendly cleaning, and convenient pickup & delivery.</p>
+      <div class="cta-row">
+        <a class="cta-button" href="#services-grid">Explore Services</a>
+        <button id="book-cta" class="cta-button">Book Pickup</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="container" style="padding:32px 20px;">
+    <div class="controls" data-reveal>
+      <div class="filters" role="tablist" aria-label="Service filters">
+        <button class="chip active" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="chip" data-filter="laundry" role="tab">Laundry</button>
+        <button class="chip" data-filter="ironing" role="tab">Ironing</button>
+        <button class="chip" data-filter="home" role="tab">Home Care</button>
+        <button class="chip" data-filter="accessories" role="tab">Shoes & Bags</button>
+      </div>
+
+      <div class="pricing-toggle" aria-hidden="false" title="Toggle pricing mode">
+        <span class="muted">Pricing:</span>
+        <button id="priceToggle" aria-pressed="false" class="toggle">Per Item</button>
+      </div>
+    </div>
+
+    <section id="services-grid" class="services-grid" aria-live="polite">
+      <!-- service cards injected by js/services.js for easy editing -->
+    </section>
+
+    <div style="margin-top:28px;text-align:center">
+      <a href="contact.html" class="learn-more">Still unsure? Contact us for a custom quote</a>
+    </div>
+  </main>
+
+  <!-- Booking modal -->
+  <div id="booking-modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="booking-title" style="display:none;">
+    <div class="modal-panel" role="document">
+      <button class="modal-close" aria-label="Close booking dialog">✕</button>
+      <h2 id="booking-title">Quick Book — <span id="booking-service-name"></span></h2>
+      <form id="booking-form" class="form">
+        <input id="bk-name" class="input" placeholder="Your name" required />
+        <input id="bk-phone" class="input" placeholder="Phone / WhatsApp" required />
+        <input id="bk-date" class="input" type="date" />
+        <textarea id="bk-notes" class="textarea" rows="3" placeholder="Notes (items, instructions)"></textarea>
+        <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+          <button type="submit" class="contact-button primary">Request Pickup</button>
+          <button type="button" class="contact-button" id="modal-cancel">Cancel</button>
+        </div>
+        <div id="booking-status" class="form-status" role="status" aria-live="polite" style="margin-top:8px"></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/main.js"></script>
+  <script src="js/services.js"></script>
+</body>
+</html>
