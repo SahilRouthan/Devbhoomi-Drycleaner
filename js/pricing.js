@@ -5,14 +5,29 @@ let itemQuantities = {}; // Track quantities: {itemId: quantity}
 
 document.addEventListener('DOMContentLoaded', async function() {
   try {
-    // Fetch pricing from backend API
-    const response = await fetch(`${API_CONFIG.BASE_URL}/pricing/all`);
-    const data = await response.json();
-    
-    if (data.success) {
-      allCategories = data.categories;
-    } else {
-      throw new Error('Failed to load pricing');
+    // Try to fetch pricing from backend API first. If that fails (e.g. GitHub Pages can't reach localhost),
+    // fall back to the static JSON bundled with the site (`src/data/pricing.json`).
+    try {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/pricing/all`);
+      const data = await response.json();
+      if (response.ok && data && data.success) {
+        allCategories = data.categories;
+        console.log('Pricing loaded from API');
+      } else {
+        throw new Error('API returned no pricing');
+      }
+    } catch (apiErr) {
+      console.warn('API pricing fetch failed, loading static pricing.json as fallback:', apiErr.message);
+      // Load local static JSON (works on GitHub Pages and static hosts)
+      try {
+        const staticRes = await fetch('./src/data/pricing.json');
+        const staticJson = await staticRes.json();
+        allCategories = staticJson.categories || [];
+        console.log('Pricing loaded from static JSON');
+      } catch (staticErr) {
+        console.error('Failed to load static pricing.json fallback:', staticErr);
+        throw staticErr; // let outer catch display error to user
+      }
     }
     
     // Load existing cart quantities
