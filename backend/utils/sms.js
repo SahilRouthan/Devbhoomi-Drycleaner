@@ -117,7 +117,7 @@ Hi ${orderData.customerDetails.name},
 
 ${statusMessage}
 
-Track your order: ${process.env.WEBSITE_URL || 'https://devbhoomidryc leans.com'}
+Track your order: ${process.env.WEBSITE_URL || 'https://devbhoomidrycleans.com'}
 
 - Devbhoomi Dry Cleans
 Call: ${process.env.BUSINESS_PHONE || '1234567890'}`;
