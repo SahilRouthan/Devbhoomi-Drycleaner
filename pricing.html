@@ -221,6 +221,20 @@
       z-index: 1000;
       border: 3px solid white;
     }
+    .pricing-banner {
+      max-width: 1200px;
+      margin: 12px auto;
+      padding: 10px 16px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: none;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+    }
+    .pricing-banner.api { background: #ecfdf5; color: #065f46; border: 1px solid #10b981; }
+    .pricing-banner.static { background: #fff7ed; color: #92400e; border: 1px solid #f59e0b; }
+    .pricing-banner.error { background: #fff1f2; color: #9f1239; border: 1px solid #ef4444; }
     .cart-float-btn:hover {
       transform: scale(1.1) rotate(5deg);
       box-shadow: 0 12px 32px rgba(59, 130, 246, 0.6);
@@ -302,6 +316,12 @@
   </div>
 
   <a href="cart.html" class="cart-float-btn" id="cartFloatBtn">
+
+      <!-- Pricing source banner (shows whether prices came from API or static fallback) -->
+      <div id="pricingBanner" class="pricing-banner" aria-live="polite" style="display:none;">
+        <!-- JS will populate this -->
+      </div>
+
     🛒
     <span class="cart-badge" id="cartBadge">0</span>
   </a>

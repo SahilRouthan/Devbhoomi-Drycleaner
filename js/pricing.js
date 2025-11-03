@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       if (response.ok && data && data.success) {
         allCategories = data.categories;
         console.log('Pricing loaded from API');
+        setPricingBanner('api', 'Pricing loaded from server');
       } else {
         throw new Error('API returned no pricing');
       }
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const staticJson = await staticRes.json();
         allCategories = staticJson.categories || [];
         console.log('Pricing loaded from static JSON');
+        setPricingBanner('static', 'Showing cached prices (static fallback)');
       } catch (staticErr) {
         console.error('Failed to load static pricing.json fallback:', staticErr);
         throw staticErr; // let outer catch display error to user
@@ -43,10 +45,23 @@ document.addEventListener('DOMContentLoaded', async function() {
     setupSearch();
   } catch (error) {
     console.error('Error loading pricing data:', error);
+    setPricingBanner('error', 'Error loading pricing. Please refresh the page.');
     document.getElementById('pricingTableBody').innerHTML = 
       '<tr><td colspan="3" style="text-align:center;color:#ef4444;padding:40px;">Error loading pricing. Please refresh the page.</td></tr>';
   }
 });
+
+// Display a small banner indicating source of pricing data
+function setPricingBanner(type, message) {
+  const banner = document.getElementById('pricingBanner');
+  if (!banner) return;
+  banner.style.display = 'block';
+  banner.textContent = message || '';
+  banner.classList.remove('api', 'static', 'error');
+  if (type === 'api') banner.classList.add('api');
+  else if (type === 'static') banner.classList.add('static');
+  else banner.classList.add('error');
+}
 
 function loadCartQuantities() {
   const cartItems = cart.getItems();
